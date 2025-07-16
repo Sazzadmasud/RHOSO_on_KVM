@@ -1,0 +1,55 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: 52-54-00-4f-06-b9-ocp4-worker1 # replace the name according to TELUS
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: 52-54-00-4f-06-b9
+    node-role.kubernetes.io/worker: ""
+
+  desiredState:
+    interfaces:
+    - name: enp2s0
+      description: Cofiguring controlplane interface
+      type: ethernet
+      state: up
+      ipv4:
+        address:
+        - ip: 172.10.10.4
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+
+    - name: enp3s0
+      description: Configuring internalapi enp3s0
+      type: ethernet
+      state: up
+      ipv4:
+        address:
+        - ip: 172.10.20.4
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+    
+    - name: enp4s0
+      description:  Configuring stroage enp4s0
+      type: ethernet
+      state: up
+      ipv4:
+        address:
+        - ip: 172.10.30.4
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+    
+ 
+  

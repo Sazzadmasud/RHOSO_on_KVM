@@ -1,0 +1,17 @@
+# Create instance metallb
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: metallb-system
+spec:
+  nodeSelector:
+    node-role.kubernetes.io/worker: ""
+
+# oc get deployment -n metallb-system controller
+# NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+# controller   1/1     1            1           40s
+
+# oc get daemonset -n metallb-system speaker
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                                            AGE
+# speaker   1         1         1       1            1           kubernetes.io/os=linux,node-role.kubernetes.io/worker=   64s

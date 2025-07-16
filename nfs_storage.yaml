@@ -1,0 +1,143 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+   name: nfs
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Delete
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv1
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share1
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share2
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv3
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share3
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv4
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share4
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv5
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share5
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv6
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share6
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv7
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share7
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv8
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi  
+  nfs: 
+    path: /home/dev-scripts/nfs_share8
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: nfs
+  volumeMode: Filesystem

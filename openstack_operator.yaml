@@ -1,0 +1,32 @@
+---
+# Create openstack-operators and openstack project 
+# oc new-project openstack-operators
+# oc new-project openstack
+# Creating operator group openstack-operators
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openstack
+  namespace: openstack-operators
+---
+# subscribe to the openstack operator
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/openstack-operator.openstack-operators: ""
+  name: openstack-operator
+  namespace: openstack-operators
+spec:
+  channel: stable-v1.0
+  installPlanApproval: Manual
+  name: openstack-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+
+# oc get installplan -n openstack-operators 
+# NAME            CSV                          APPROVAL   APPROVED
+# install-2bvn4   openstack-operator.v1.0.11   Manual     false
+
+# oc patch installplan install-2bvn4 --namespace openstack-operators  --type merge --patch '{"spec":{"approved":true}}'
+# installplan.operators.coreos.com/install-2bvn4 patched

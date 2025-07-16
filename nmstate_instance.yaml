@@ -1,0 +1,9 @@
+apiVersion: nmstate.io/v1
+kind: NMState
+metadata:
+  name: nmstate
+
+# oc get clusterserviceversion -n openshift-nmstate \
+# -o custom-columns=Name:.metadata.name,Phase:.status.phase
+# Name                                              Phase
+# kubernetes-nmstate-operator.4.18.0-202506250134   Succeeded

@@ -1,0 +1,29 @@
+# Metallb operator namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb-system
+---
+# Create metallb operatorgroup
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: metallb-operator
+  namespace: metallb-system
+---
+# Subscribe to the metallb operator
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: metallb-operator-sub
+  namespace: metallb-system
+spec:
+  channel: stable
+  name: metallb-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+
+# oc get clusterserviceversion -n metallb-system \
+# -o custom-columns=Name:.metadata.name,Phase:.status.phase
+# Name                                    Phase
+# metallb-operator.v4.18.0-202506251003   Succeeded

@@ -1,0 +1,37 @@
+---
+apiVersion: operator.openstack.org/v1beta1
+kind: OpenStack
+metadata:
+   name: openstack
+   namespace: openstack-operators
+
+# oc get operators openstack-operator.openstack-operators
+# NAME                                     AGE
+# openstack-operator.openstack-operators   3m2s
+# oc get pods -n openstack-operators --sort-by=.metadata.creationTimestamp
+
+# oc get pods -n openstack-operators --sort-by=.metadata.creationTimestamp 
+# NAME                                                              READY   STATUS    RESTARTS   AGE
+# openstack-operator-controller-operator-76577b9d4d-jq2jg           2/2     Running   0          3m40s
+# mariadb-operator-controller-manager-6445bcc566-5nnr9              2/2     Running   0          96s
+# glance-operator-controller-manager-7b677b4b59-lzjzz               2/2     Running   0          96s
+# nova-operator-controller-manager-669f7c6b4f-l68nk                 2/2     Running   0          96s
+# heat-operator-controller-manager-78545b7447-t2j7z                 2/2     Running   0          96s
+# horizon-operator-controller-manager-67fbcfd666-8qk24              2/2     Running   0          96s
+# infra-operator-controller-manager-5cb568cf4b-zkmjl                2/2     Running   0          96s
+# ironic-operator-controller-manager-7b999f65dd-r9629               2/2     Running   0          96s
+# keystone-operator-controller-manager-7877cd5fc8-hkbxg             2/2     Running   0          96s
+# octavia-operator-controller-manager-64bbff65bf-nrgdp              2/2     Running   0          96s
+# barbican-operator-controller-manager-79c778fb8b-sshlc             2/2     Running   0          96s
+# test-operator-controller-manager-5d857586cd-jmqht                 2/2     Running   0          96s
+# designate-operator-controller-manager-868dd49b9c-ph7b9            2/2     Running   0          96s
+# manila-operator-controller-manager-7657df4596-hhdwg               2/2     Running   0          96s
+# openstack-baremetal-operator-controller-manager-74c85f4798rnffj   2/2     Running   0          96s
+# neutron-operator-controller-manager-75476cc7fb-t4p2r              2/2     Running   0          96s
+# cinder-operator-controller-manager-664ff485cd-nnhbp               2/2     Running   0          96s
+# ovn-operator-controller-manager-d47cb47fb-967bc                   2/2     Running   0          96s
+# placement-operator-controller-manager-d86b79bfc-ntt5n             2/2     Running   0          96s
+# telemetry-operator-controller-manager-fcc5449d6-tpt8x             2/2     Running   0          96s
+# swift-operator-controller-manager-5b9b8d7ff6-cmr5t                2/2     Running   0          96s
+# rabbitmq-cluster-operator-manager-8788bfd75-j6cpr                 1/1     Running   0          95s
+# openstack-operator-controller-manager-75db796d79-kc47q            2/2     Running   0          95s

@@ -1,0 +1,122 @@
+---
+# ctlplane secrets
+apiVersion: v1
+data:
+  AdminPassword: b3BlbnN0YWNr
+  AodhPassword: b3BlbnN0YWNr
+  AodhDatabasePassword: b3BlbnN0YWNr
+  BarbicanDatabasePassword: b3BlbnN0YWNr
+  BarbicanPassword: b3BlbnN0YWNr
+  BarbicanSimpleCryptoKEK: b3BlbnN0YWNr
+  CeilometerPassword: b3BlbnN0YWNr
+  CinderDatabasePassword: b3BlbnN0YWNr
+  CinderPassword: b3BlbnN0YWNr
+  DatabasePassword: b3BlbnN0YWNr
+  DbRootPassword: b3BlbnN0YWNr
+  DesignateDatabasePassword: b3BlbnN0YWNr
+  DesignatePassword: b3BlbnN0YWNr
+  GlanceDatabasePassword: b3BlbnN0YWNr
+  GlancePassword: b3BlbnN0YWNr
+  HeatAuthEncryptionKey: TFFBZ2ZNQ0hUeHlUVlFFYWI0OU1LQ05hUzVHQkx5RmQ=
+  HeatDatabasePassword: b3BlbnN0YWNr
+  HeatPassword: b3BlbnN0YWNr
+  IronicDatabasePassword: b3BlbnN0YWNr
+  IronicInspectorDatabasePassword: b3BlbnN0YWNr
+  IronicInspectorPassword: b3BlbnN0YWNr
+  IronicPassword: b3BlbnN0YWNr
+  KeystoneDatabasePassword: b3BlbnN0YWNr
+  ManilaDatabasePassword: b3BlbnN0YWNr
+  ManilaPassword: b3BlbnN0YWNr
+  MetadataSecret: b3BlbnN0YWNr
+  NeutronDatabasePassword: b3BlbnN0YWNr
+  NeutronPassword: b3BlbnN0YWNr
+  NovaAPIDatabasePassword: b3BlbnN0YWNr
+  NovaAPIMessageBusPassword: b3BlbnN0YWNr
+  NovaCell0DatabasePassword: b3BlbnN0YWNr
+  NovaCell0MessageBusPassword: b3BlbnN0YWNr
+  NovaCell1DatabasePassword: b3BlbnN0YWNr
+  NovaCell1MessageBusPassword: b3BlbnN0YWNr
+  NovaPassword: b3BlbnN0YWNr
+  OctaviaDatabasePassword: b3BlbnN0YWNr
+  OctaviaPassword: b3BlbnN0YWNr
+  PlacementDatabasePassword: b3BlbnN0YWNr
+  PlacementPassword: b3BlbnN0YWNr
+  SwiftPassword: b3BlbnN0YWNr
+kind: Secret
+metadata:
+  name: osp-secret
+  namespace: openstack
+type: Opaque
+---
+# libvirt secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: libvirt-secret
+  namespace: openstack
+type: Opaque
+data:
+  LibvirtPassword: b3BlbnN0YWNr
+
+# oc describe secret osp-secret -n openstack
+# Name:         osp-secret
+# Namespace:    openstack
+# Labels:       <none>
+# Annotations:  <none>
+
+# Type:  Opaque
+
+# Data
+# ====
+# DbRootPassword:                   9 bytes
+# HeatAuthEncryptionKey:            32 bytes
+# IronicInspectorDatabasePassword:  9 bytes
+# OctaviaDatabasePassword:          9 bytes
+# BarbicanPassword:                 9 bytes
+# DatabasePassword:                 9 bytes
+# IronicInspectorPassword:          9 bytes
+# HeatDatabasePassword:             9 bytes
+# KeystoneDatabasePassword:         9 bytes
+# NovaCell1DatabasePassword:        9 bytes
+# AodhPassword:                     9 bytes
+# BarbicanSimpleCryptoKEK:          9 bytes
+# GlancePassword:                   9 bytes
+# IronicDatabasePassword:           9 bytes
+# IronicPassword:                   9 bytes
+# ManilaPassword:                   9 bytes
+# NeutronDatabasePassword:          9 bytes
+# AodhDatabasePassword:             9 bytes
+# CeilometerPassword:               9 bytes
+# DesignateDatabasePassword:        9 bytes
+# HeatPassword:                     9 bytes
+# NovaCell0DatabasePassword:        9 bytes
+# CinderDatabasePassword:           9 bytes
+# NeutronPassword:                  9 bytes
+# NovaAPIMessageBusPassword:        9 bytes
+# NovaCell0MessageBusPassword:      9 bytes
+# PlacementPassword:                9 bytes
+# SwiftPassword:                    9 bytes
+# AdminPassword:                    9 bytes
+# BarbicanDatabasePassword:         9 bytes
+# DesignatePassword:                9 bytes
+# GlanceDatabasePassword:           9 bytes
+# ManilaDatabasePassword:           9 bytes
+# MetadataSecret:                   9 bytes
+# NovaAPIDatabasePassword:          9 bytes
+# NovaCell1MessageBusPassword:      9 bytes
+# NovaPassword:                     9 bytes
+# OctaviaPassword:                  9 bytes
+# CinderPassword:                   9 bytes
+# PlacementDatabasePassword:        9 bytes
+
+# oc describe secret libvirt-secret -n openstack
+# Name:         libvirt-secret
+# Namespace:    openstack
+# Labels:       <none>
+# Annotations:  <none>
+
+# Type:  Opaque
+
+# Data
+# ====
+# LibvirtPassword:  9 bytes

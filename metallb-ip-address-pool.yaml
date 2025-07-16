@@ -1,0 +1,27 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: ctlplane
+spec:
+  addresses:
+  - 172.10.10.80-172.10.10.90
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: internalapi
+spec:
+  addresses:
+  - 172.10.20.80-172.10.20.90
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: storage
+spec:
+  addresses:
+  - 172.10.30.80-172.10.30.90

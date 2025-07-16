@@ -1,0 +1,5 @@
+[nfs]
+nas_host=10.0.0.3
+nas_share_path=/home/dev-scripts/cinder
+
+# oc create secret generic cinder-nfs-config --from-file=nfs-cinder-conf
