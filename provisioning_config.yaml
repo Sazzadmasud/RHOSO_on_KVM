@@ -1,0 +1,51 @@
+apiVersion: metal3.io/v1alpha1
+kind: Provisioning
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"metal3.io/v1alpha1","kind":"Provisioning","metadata":{"annotations":{},"name":"provisioning-configuration"},"spec":{"provisioningNetwork":"Disabled","watchAllNamespaces":true}}
+  creationTimestamp: "2025-07-17T20:04:33Z"
+  finalizers:
+  - provisioning.metal3.io
+  generation: 2
+  name: provisioning-configuration
+  resourceVersion: "1456618"
+  uid: 00cdb975-8638-47c8-9aa2-d82b077f7589
+spec:
+  preProvisioningOSDownloadURLs: {}
+  provisioningNetwork: Disabled
+  watchAllNamespaces: true
+status:
+  generations:
+  - group: apps
+    hash: ""
+    lastGeneration: 1
+    name: metal3
+    namespace: openshift-machine-api
+    resource: deployments
+  - group: apps
+    hash: ""
+    lastGeneration: 1
+    name: metal3-baremetal-operator
+    namespace: openshift-machine-api
+    resource: deployments
+  - group: admissionregistration.k8s.io
+    hash: ""
+    lastGeneration: 2
+    name: baremetal-operator-validating-webhook-configuration
+    namespace: ""
+    resource: validatingwebhookconfigurations
+  - group: apps
+    hash: ""
+    lastGeneration: 1
+    name: metal3-image-customization
+    namespace: openshift-machine-api
+    resource: deployments
+  - group: apps
+    hash: ""
+    lastGeneration: 1
+    name: ironic-proxy
+    namespace: openshift-machine-api
+    resource: daemonsets
+  observedGeneration: 2
+  readyReplicas: 0

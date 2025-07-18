@@ -1,0 +1,10 @@
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  creationTimestamp: "2025-07-17T12:00:00Z"
+  deletionGracePeriodSeconds: 0
+  deletionTimestamp: "2025-07-17T12:05:00Z" # Indicates it's being deleted
+  finalizers:
+  - baremetalhost.metal3.io # This is the finalizer blocking deletion
+  name: dataplane
+  namespace: openstack

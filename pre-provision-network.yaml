@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dataplane-preprovision-network-data
+  namespace: openstack
+stringData:
+  nmstate: |
+    interfaces:
+      - name: enp1s0
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.10.10.130
+            prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 10.2.32.1
+        routes:
+          config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.10.10.1
+            next-hop-interface: enp1s0
+    type: Opaque

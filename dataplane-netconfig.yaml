@@ -1,0 +1,35 @@
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: openstacknetconfig
+  namespace: openstack
+spec:
+  networks:
+  - name: ctlplane
+    dnsDomain: ctlplane.demolab.internal
+    subnets:
+    - name: ctlplanesubnet
+      allocationRanges:
+      - end: 172.10.10.130
+        start: 172.10.10.100
+      cidr: 172.10.10.0/24
+      gateway: 172.10.10.1
+      routes:
+      - destination: 10.0.0.0/24
+        nexthop: 172.10.10.1
+  - name: internalapi
+    dnsDomain: internalapi.demolab.internal 
+    subnets:
+    - name: internalapisubnet
+      allocationRanges:
+      - end: 172.10.20.130
+        start: 172.10.20.100
+      cidr: 172.10.20.0/24
+  - name: storage
+    dnsDomain: storage.demolab.internal
+    subnets:
+    - name: storagesubnet
+      allocationRanges:
+      - end: 172.10.30.130
+        start: 172.10.30.100
+      cidr: 172.10.30.0/24
