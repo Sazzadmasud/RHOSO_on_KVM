@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: temp-repo-populator
+  namespace: openstack
+spec:
+  containers:
+    - name: createrepo-container
+      image: quay.io/centos/centos:stream9
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: repo-vol
+          mountPath: /mnt/repodata
+  volumes:
+    - name: repo-vol
+      persistentVolumeClaim:
+        claimName: yum-repo-data
+  restartPolicy: Never

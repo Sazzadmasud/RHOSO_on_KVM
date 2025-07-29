@@ -1,0 +1,169 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "6"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"annotations":{"deprecated.daemonset.template.generation":"5"},"creationTimestamp":"2025-07-16T18:12:48Z","generation":5,"labels":{"app":"kubernetes-nmstate","component":"kubernetes-nmstate-handler"},"name":"nmstate-handler","namespace":"openshift-nmstate","ownerReferences":[{"apiVersion":"nmstate.io/v1","blockOwnerDeletion":true,"controller":true,"kind":"NMState","name":"nmstate","uid":"30db3da4-ba5b-451b-8c1f-812f846d29ef"}],"resourceVersion":"9831058","uid":"3ff38e1e-0c1e-49e0-abbd-24ae54b008f7"},"spec":{"revisionHistoryLimit":10,"selector":{"matchLabels":{"name":"nmstate-handler"}},"template":{"metadata":{"annotations":{"description":"kubernetes-nmstate-handler configures and presents node networking, reconciling declerative NNCP and reports with NNS and NNCE","kubectl.kubernetes.io/restartedAt":"2025-07-24T11:05:06-04:00"},"creationTimestamp":null,"labels":{"app":"kubernetes-nmstate","component":"kubernetes-nmstate-handler","name":"nmstate-handler"}},"spec":{"affinity":{},"containers":[{"args":["--zap-time-encoding=iso8601"],"command":["manager"],"env":[{"name":"WATCH_NAMESPACE"},{"name":"POD_NAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.name"}}},{"name":"COMPONENT","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['app.kubernetes.io/component']"}}},{"name":"PART_OF","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['app.kubernetes.io/part-of']"}}},{"name":"VERSION","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['app.kubernetes.io/version']"}}},{"name":"MANAGED_BY","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['app.kubernetes.io/managed-by']"}}},{"name":"OPERATOR_NAME","value":"nmstate"},{"name":"NODE_NAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"spec.nodeName"}}},{"name":"ENABLE_PROFILER","value":"False"},{"name":"PROFILER_PORT","value":"6060"},{"name":"NMSTATE_INSTANCE_NODE_LOCK_FILE","value":"/var/k8s_nmstate/handler_lock"}],"image":"registry.redhat.io/openshift4/ose-kubernetes-nmstate-handler-rhel9@sha256:ac8faa00de6bbe6a89e863c6695e9f23baedd76dae9f3354e2752d7e4a331e6a","imagePullPolicy":"Always","name":"nmstate-handler","readinessProbe":{"exec":{"command":["cat","/tmp/healthy"]},"failureThreshold":3,"initialDelaySeconds":5,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1},"resources":{"requests":{"cpu":"100m","memory":"100Mi"}},"securityContext":{"privileged":true},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/run/dbus/system_bus_socket","name":"dbus-socket"},{"mountPath":"/var/k8s_nmstate","name":"nmstate-lock"},{"mountPath":"/run/openvswitch","name":"ovs-socket"},{"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount","name":"service-ca","readOnly":true}]}],"dnsPolicy":"Default","hostNetwork":true,"nodeSelector":{"kubernetes.io/arch":"amd64","kubernetes.io/os":"linux"},"priorityClassName":"system-node-critical","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccount":"nmstate-handler","serviceAccountName":"nmstate-handler","terminationGracePeriodSeconds":30,"tolerations":[{"operator":"Exists"}],"volumes":[{"hostPath":{"path":"/run/dbus/system_bus_socket","type":"Socket"},"name":"dbus-socket"},{"hostPath":{"path":"/var/k8s_nmstate","type":""},"name":"nmstate-lock"},{"hostPath":{"path":"/run/openvswitch","type":""},"name":"ovs-socket"},{"name":"service-ca","projected":{"defaultMode":420,"sources":[{"serviceAccountToken":{"expirationSeconds":3600,"path":"token"}},{"configMap":{"items":[{"key":"ca.crt","path":"ca-bundle.crt"}],"name":"kube-root-ca.crt"}}]}}]}},"updateStrategy":{"rollingUpdate":{"maxSurge":0,"maxUnavailable":"10%"},"type":"RollingUpdate"}},"status":{"currentNumberScheduled":1,"desiredNumberScheduled":1,"numberMisscheduled":0,"numberReady":0,"numberUnavailable":1,"observedGeneration":5,"updatedNumberScheduled":1}}
+  creationTimestamp: "2025-07-16T18:12:48Z"
+  generation: 6
+  labels:
+    app: kubernetes-nmstate
+    component: kubernetes-nmstate-handler
+  name: nmstate-handler
+  namespace: openshift-nmstate
+  ownerReferences:
+  - apiVersion: nmstate.io/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: NMState
+    name: nmstate
+    uid: 30db3da4-ba5b-451b-8c1f-812f846d29ef
+  resourceVersion: "9847543"
+  uid: 3ff38e1e-0c1e-49e0-abbd-24ae54b008f7
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: nmstate-handler
+  template:
+    metadata:
+      annotations:
+        description: kubernetes-nmstate-handler configures and presents node networking,
+          reconciling declerative NNCP and reports with NNS and NNCE
+        kubectl.kubernetes.io/restartedAt: "2025-07-24T11:05:06-04:00"
+      creationTimestamp: null
+      labels:
+        app: kubernetes-nmstate
+        component: kubernetes-nmstate-handler
+        name: nmstate-handler
+    spec:
+      affinity: {}
+      containers:
+      - args:
+        - --zap-time-encoding=iso8601
+        command:
+        - manager
+        env:
+        - name: WATCH_NAMESPACE
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: COMPONENT
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels['app.kubernetes.io/component']
+        - name: PART_OF
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels['app.kubernetes.io/part-of']
+        - name: VERSION
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels['app.kubernetes.io/version']
+        - name: MANAGED_BY
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels['app.kubernetes.io/managed-by']
+        - name: OPERATOR_NAME
+          value: nmstate
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: ENABLE_PROFILER
+          value: "False"
+        - name: PROFILER_PORT
+          value: "6060"
+        - name: NMSTATE_INSTANCE_NODE_LOCK_FILE
+          value: /var/k8s_nmstate/handler_lock
+        image: registry.redhat.io/openshift4/ose-kubernetes-nmstate-handler-rhel9@sha256:ac8faa00de6bbe6a89e863c6695e9f23baedd76dae9f3354e2752d7e4a331e6a
+        imagePullPolicy: Always
+        name: nmstate-handler
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /run/dbus/system_bus_socket
+          name: dbus-socket
+        - mountPath: /var/k8s_nmstate
+          name: nmstate-lock
+        - mountPath: /run/openvswitch
+          name: ovs-socket
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: service-ca
+          readOnly: true
+      dnsPolicy: Default
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+      priorityClassName: system-node-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: nmstate-handler
+      serviceAccountName: nmstate-handler
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - operator: Exists
+      volumes:
+      - hostPath:
+          path: /run/dbus/system_bus_socket
+          type: Socket
+        name: dbus-socket
+      - hostPath:
+          path: /var/k8s_nmstate
+          type: ""
+        name: nmstate-lock
+      - hostPath:
+          path: /run/openvswitch
+          type: ""
+        name: ovs-socket
+      - name: service-ca
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3600
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 10%
+    type: RollingUpdate
+status:
+  currentNumberScheduled: 1
+  desiredNumberScheduled: 1
+  numberMisscheduled: 0
+  numberReady: 0
+  numberUnavailable: 1
+  observedGeneration: 6
+  updatedNumberScheduled: 1

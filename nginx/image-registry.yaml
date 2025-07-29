@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: image-registry-pv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  nfs:
+    path: /home/dev-scripts/image-registry-storage
+    server: 10.0.0.3
+  storageClassName: nfs
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: yum-repo-data
+  namespace: openshift-image-registry
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+    storageClass: nfs
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: image-registry-storage
+#   namespace: openstack # openshift-image-registry
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 100Gi
+#     storageClass: nfs

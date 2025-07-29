@@ -2,6 +2,7 @@ apiVersion: nmstate.io/v1
 kind: NodeNetworkConfigurationPolicy
 metadata:
   name: 52-54-00-4f-06-b9-ocp4-worker1 # replace the name according to TELUS
+  namespace: openstack
 spec:
   nodeSelector:
     kubernetes.io/hostname: 52-54-00-4f-06-b9
@@ -50,6 +51,17 @@ spec:
       ipv6:
         enabled: false
       mtu: 1500
-    
- 
-  
+
+    - name: enp10s0
+      description:  Configuring osp mgmt 
+      type: ethernet
+      state: up
+      ipv4:
+        address:
+        - ip: 172.10.40.4
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500

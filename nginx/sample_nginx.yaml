@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-webserver
+  labels:
+    app: nginx-webserver
+spec:
+  replicas: 1 # You can increase this for more Nginx pods/load balancing
+  selector:
+    matchLabels:
+      app: nginx-webserver
+  template:
+    metadata:
+      labels:
+        app: nginx-webserver
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest # Uses the official Nginx image from Docker Hub
+        command: ["nginx"] # NEW: Directly execute nginx
+        args: ["-g", "daemon off;"] # NEW: Run nginx in foreground
+        ports:
+        - containerPort: 8080 # Nginx will now listen on port 8080
+        readinessProbe: # Checks if Nginx is ready to serve traffic
+          httpGet:
+            path: /
+            port: 8080 # Update probe port
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe: # Checks if Nginx is still alive
+          httpGet:
+            path: /
+            port: 8080 # Update probe port
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        - name: nginx-cache-volume # Mount a volume for Nginx's cache
+          mountPath: /var/cache/nginx
+        - name: nginx-config-volume # Mount the custom nginx.conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: nginx-default-conf-volume # Mount custom default.conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf # Mount only the default.conf file from the ConfigMap
+      volumes:
+      - name: nginx-cache-volume # Define the emptyDir volume
+        emptyDir: {}
+      - name: nginx-config-volume # Define the ConfigMap volume for nginx.conf
+        configMap:
+          name: nginx-config # Refers to the ConfigMap defined below
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+      - name: nginx-default-conf-volume # Define ConfigMap volume for default.conf
+        configMap:
+          name: nginx-config # Uses the same ConfigMap
+          items:
+          - key: default.conf
+            path: default.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-webserver-service
+  labels:
+    app: nginx-webserver
+spec:
+  selector:
+    app: nginx-webserver # Matches the labels of the Nginx Deployment pods
+  ports:
+    - protocol: TCP
+      port: 80 # The port the service exposes
+      targetPort: 8080 # The port the Nginx container listens on
+  type: ClusterIP # Makes the service only accessible within the cluster
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: nginx-webserver-route
+  labels:
+    app: nginx-webserver
+spec:
+  to:
+    kind: Service
+    name: nginx-webserver-service # Points to the Service created above
+  port:
+    targetPort: 8080 # <--- CHANGED: Route now targets port 8080 of the Service
+  tls:
+    termination: Edge # Recommended for HTTPS, router handles TLS
+    insecureEdgeTerminationPolicy: Redirect # Redirect HTTP to HTTPS
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    app: nginx-webserver
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /dev/stderr warn;
+    pid /tmp/nginx.pid; # <--- CHANGED: PID file moved to /tmp
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log /dev/stdout main;
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+
+        include /etc/nginx/conf.d/*.conf; # This will now include our custom default.conf
+
+        # The 'server' block is now primarily in default.conf
+    }
+  default.conf: | # Custom default.conf
+    server {
+        listen 8080 default_server; # Listen on 8080, make it the default server
+        listen [::]:8080 default_server; # Listen on IPv6 as well
+
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }

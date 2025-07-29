@@ -1,0 +1,89 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"nmstate.io/v1","kind":"NodeNetworkConfigurationPolicy","metadata":{"annotations":{},"name":"52-54-00-4f-06-b9-ocp4-worker1"},"spec":{"desiredState":{"interfaces":[{"description":"Cofiguring controlplane interface","ipv4":{"address":[{"ip":"172.10.10.4","prefix-length":24}],"dhcp":false,"enabled":true},"ipv6":{"enabled":false},"mtu":1500,"name":"enp2s0","state":"up","type":"ethernet"},{"description":"Configuring internalapi enp3s0","ipv4":{"address":[{"ip":"172.10.20.4","prefix-length":24}],"dhcp":false,"enabled":true},"ipv6":{"enabled":false},"mtu":1500,"name":"enp3s0","state":"up","type":"ethernet"},{"description":"Configuring stroage enp4s0","ipv4":{"address":[{"ip":"172.10.30.4","prefix-length":24}],"dhcp":false,"enabled":true},"ipv6":{"enabled":false},"mtu":1500,"name":"enp4s0","state":"up","type":"ethernet"},{"description":"Configuring osp mgmt","ipv4":{"address":[{"ip":"172.10.40.4","prefix-length":24}],"dhcp":false,"enabled":true},"ipv6":{"enabled":false},"mtu":1500,"name":"enp1s0","state":"up","type":"ethernet"}]},"nodeSelector":{"kubernetes.io/hostname":"52-54-00-4f-06-b9","node-role.kubernetes.io/worker":""}}}
+    nmstate.io/webhook-mutating-timestamp: "1753325704600599696"
+  creationTimestamp: "2025-07-16T18:50:23Z"
+  generation: 4
+  name: 52-54-00-4f-06-b9-ocp4-worker1
+  resourceVersion: "9849544"
+  uid: 0799e982-119d-4ef4-9065-4ad2062bafe2
+spec:
+  desiredState:
+    interfaces:
+    - description: Cofiguring controlplane interface
+      ipv4:
+        address:
+        - ip: 172.10.10.4
+          prefix-length: 24
+        dhcp: false
+        enabled: true
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: enp2s0
+      state: up
+      type: ethernet
+    - description: Configuring internalapi enp3s0
+      ipv4:
+        address:
+        - ip: 172.10.20.4
+          prefix-length: 24
+        dhcp: false
+        enabled: true
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: enp3s0
+      state: up
+      type: ethernet
+    - description: Configuring stroage enp4s0
+      ipv4:
+        address:
+        - ip: 172.10.30.4
+          prefix-length: 24
+        dhcp: false
+        enabled: true
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: enp4s0
+      state: up
+      type: ethernet
+    - description: Configuring osp mgmt
+      ipv4:
+        address:
+        - ip: 172.10.40.4
+          prefix-length: 24
+        dhcp: false
+        enabled: true
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: enp10s0
+      state: up
+      type: ethernet
+  nodeSelector:
+    kubernetes.io/hostname: 52-54-00-4f-06-b9
+    node-role.kubernetes.io/worker: ""
+status:
+  conditions:
+  - lastHeartbeatTime: "2025-07-24T15:30:56Z"
+    lastTransitionTime: "2025-07-24T02:55:04Z"
+    reason: ConfigurationProgressing
+    status: Unknown
+    type: Available
+  - lastHeartbeatTime: "2025-07-24T15:30:56Z"
+    lastTransitionTime: "2025-07-24T02:55:04Z"
+    reason: ConfigurationProgressing
+    status: Unknown
+    type: Degraded
+  - lastHeartbeatTime: "2025-07-24T15:30:56Z"
+    lastTransitionTime: "2025-07-24T02:55:36Z"
+    message: Policy is progressing 0/1 nodes finished
+    reason: ConfigurationProgressing
+    status: "True"
+    type: Progressing
+  lastUnavailableNodeCountUpdate: "2025-07-16T18:54:30Z"

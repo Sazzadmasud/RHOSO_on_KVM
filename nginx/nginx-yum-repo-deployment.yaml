@@ -1,0 +1,50 @@
+# nginx-yum-repo-deployment.yaml
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: yum-repo-nginx
+  namespace: openstack
+  labels:
+    app: yum-repo-nginx
+spec:
+  replicas: 1
+  selector:
+    app: yum-repo-nginx
+  template:
+    metadata:
+      labels:
+        app: yum-repo-nginx
+    spec:
+      containers:
+      - name: nginx-repo-server
+        image: nginxinc/nginx-unprivileged:alpine3.19 # Use an unprivileged Nginx image
+        ports:
+        - containerPort: 80 # Nginx default HTTP port
+          protocol: TCP
+        volumeMounts:
+        - name: repo-data-volume
+          mountPath: /usr/share/nginx/html/myrepo # Mount PVC here, Nginx will serve from this
+        # Optional: If you need a custom nginx.conf, mount a ConfigMap here
+        # - name: nginx-config-vol
+        #   mountPath: /etc/nginx/nginx.conf
+        #   subPath: nginx.conf
+      volumes:
+      - name: repo-data-volume
+        persistentVolumeClaim:
+          claimName: yum-repo-data # Reference your PVC
+      # Optional: If using custom nginx.conf
+      # - name: nginx-config-vol
+      #   configMap:
+      #     name: nginx-yum-repo-config
+      terminationGracePeriodSeconds: 30
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - nginx-repo-server
+        from:
+          kind: ImageStreamTag
+          name: nginxinc/nginx-unprivileged:alpine3.19 # Or your internal image stream
+          namespace: openstack # Or the namespace where the image stream resides

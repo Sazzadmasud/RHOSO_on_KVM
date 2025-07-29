@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openshift-ingress
+  namespace: openstack # This policy applies to pods in the 'openstack' namespace
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-webserver # Apply this policy to your Nginx pods
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress # Allows traffic from OpenShift Ingress Controller
+    ports:
+    - protocol: TCP
+      port: 8080 # Allow traffic to Nginx's container port (where Nginx is listening)
+  policyTypes:
+  - Ingress

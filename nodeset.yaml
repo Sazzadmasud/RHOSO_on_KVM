@@ -1,0 +1,1021 @@
+Name:         openstackdataplanenodesets.dataplane.openstack.org
+Namespace:    
+Labels:       <none>
+Annotations:  controller-gen.kubebuilder.io/version: v0.14.0
+API Version:  apiextensions.k8s.io/v1
+Kind:         CustomResourceDefinition
+Metadata:
+  Creation Timestamp:  2025-07-16T18:22:57Z
+  Generation:          1
+  Resource Version:    137761
+  UID:                 e0967eef-1a39-407f-b3ff-f09c575de202
+Spec:
+  Conversion:
+    Strategy:  None
+  Group:       dataplane.openstack.org
+  Names:
+    Kind:       OpenStackDataPlaneNodeSet
+    List Kind:  OpenStackDataPlaneNodeSetList
+    Plural:     openstackdataplanenodesets
+    Short Names:
+      osdpns
+      osdpnodeset
+      osdpnodesets
+    Singular:  openstackdataplanenodeset
+  Scope:       Namespaced
+  Versions:
+    Additional Printer Columns:
+      Description:  Status
+      Json Path:    .status.conditions[0].status
+      Name:         Status
+      Type:         string
+      Description:  Message
+      Json Path:    .status.conditions[0].message
+      Name:         Message
+      Type:         string
+    Name:           v1beta1
+    Schema:
+      openAPIV3Schema:
+        Properties:
+          API Version:
+            Type:  string
+          Kind:
+            Type:  string
+          Metadata:
+            Type:  object
+          Spec:
+            Properties:
+              Baremetal Set Template:
+                Properties:
+                  Agent Image URL:
+                    Type:  string
+                  Apache Image URL:
+                    Type:  string
+                  Automated Cleaning Mode:
+                    Default:  metadata
+                    Enum:
+                      metadata
+                      disabled
+                    Type:  string
+                  Bmh Label Selector:
+                    Additional Properties:
+                      Type:  string
+                    Type:    object
+                  Bmh Namespace:
+                    Default:  openshift-machine-api
+                    Type:     string
+                  Cloud User Name:
+                    Default:  cloud-admin
+                    Type:     string
+                  Ctlplane Interface:
+                    Type:  string
+                  Deployment SSH Secret:
+                    Type:  string
+                  Domain Name:
+                    Type:  string
+                  Hardware Reqs:
+                    Properties:
+                      Cpu Reqs:
+                        Properties:
+                          Arch:
+                            Enum:
+                              x86_64
+                              ppc64le
+                            Type:  string
+                          Count Req:
+                            Properties:
+                              Count:
+                                Minimum:  1
+                                Type:     integer
+                              Exact Match:
+                                Type:  boolean
+                            Type:      object
+                          Mhz Req:
+                            Properties:
+                              Exact Match:
+                                Type:  boolean
+                              Mhz:
+                                Minimum:  1
+                                Type:     integer
+                            Type:         object
+                        Type:             object
+                      Disk Reqs:
+                        Properties:
+                          Gb Req:
+                            Properties:
+                              Exact Match:
+                                Type:  boolean
+                              Gb:
+                                Minimum:  1
+                                Type:     integer
+                            Type:         object
+                          Ssd Req:
+                            Properties:
+                              Exact Match:
+                                Type:  boolean
+                              Ssd:
+                                Type:  boolean
+                            Type:      object
+                        Type:          object
+                      Mem Reqs:
+                        Properties:
+                          Gb Req:
+                            Properties:
+                              Exact Match:
+                                Type:  boolean
+                              Gb:
+                                Minimum:  1
+                                Type:     integer
+                            Type:         object
+                        Type:             object
+                    Type:                 object
+                  Os Container Image URL:
+                    Type:  string
+                  Os Image:
+                    Default:  edpm-hardened-uefi.qcow2
+                    Type:     string
+                  Password Secret:
+                    Properties:
+                      Name:
+                        Type:  string
+                      Namespace:
+                        Type:                     string
+                    Type:                         object
+                    X - Kubernetes - Map - Type:  atomic
+                  Provision Server Name:
+                    Type:  string
+                  Provision Server Node Selector:
+                    Additional Properties:
+                      Type:  string
+                    Type:    object
+                  Provisioning Interface:
+                    Type:  string
+                Required:
+                  cloudUserName
+                  ctlplaneInterface
+                  deploymentSSHSecret
+                Type:  object
+              Env:
+                Items:
+                  Properties:
+                    Name:
+                      Type:  string
+                    Value:
+                      Type:  string
+                    Value From:
+                      Properties:
+                        Config Map Key Ref:
+                          Properties:
+                            Key:
+                              Type:  string
+                            Name:
+                              Type:  string
+                            Optional:
+                              Type:  boolean
+                          Required:
+                            key
+                          Type:                         object
+                          X - Kubernetes - Map - Type:  atomic
+                        Field Ref:
+                          Properties:
+                            API Version:
+                              Type:  string
+                            Field Path:
+                              Type:  string
+                          Required:
+                            fieldPath
+                          Type:                         object
+                          X - Kubernetes - Map - Type:  atomic
+                        Resource Field Ref:
+                          Properties:
+                            Container Name:
+                              Type:  string
+                            Divisor:
+                              Any Of:
+                                Type:                              integer
+                                Type:                              string
+                              Pattern:                             ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              X - Kubernetes - Int - Or - String:  true
+                            Resource:
+                              Type:  string
+                          Required:
+                            resource
+                          Type:                         object
+                          X - Kubernetes - Map - Type:  atomic
+                        Secret Key Ref:
+                          Properties:
+                            Key:
+                              Type:  string
+                            Name:
+                              Type:  string
+                            Optional:
+                              Type:  boolean
+                          Required:
+                            key
+                          Type:                         object
+                          X - Kubernetes - Map - Type:  atomic
+                      Type:                             object
+                  Required:
+                    name
+                  Type:  object
+                Type:    array
+              Network Attachments:
+                Items:
+                  Type:  string
+                Type:    array
+              Node Template:
+                Properties:
+                  Ansible:
+                    Properties:
+                      Ansible Host:
+                        Type:  string
+                      Ansible Port:
+                        Type:  integer
+                      Ansible User:
+                        Type:  string
+                      Ansible Vars:
+                        X - Kubernetes - Preserve - Unknown - Fields:  true
+                      Ansible Vars From:
+                        Items:
+                          Properties:
+                            Config Map Ref:
+                              Properties:
+                                Name:
+                                  Max Length:  253
+                                  Type:        string
+                                Optional:
+                                  Type:                     boolean
+                              Type:                         object
+                              X - Kubernetes - Map - Type:  atomic
+                            Prefix:
+                              Type:  string
+                            Secret Ref:
+                              Properties:
+                                Name:
+                                  Max Length:  253
+                                  Type:        string
+                                Optional:
+                                  Type:                     boolean
+                              Type:                         object
+                              X - Kubernetes - Map - Type:  atomic
+                          Type:                             object
+                        Type:                               array
+                    Type:                                   object
+                  Ansible SSH Private Key Secret:
+                    Max Length:  253
+                    Type:        string
+                  Extra Mounts:
+                    Items:
+                      Properties:
+                        Extra Vol Type:
+                          Type:  string
+                        Mounts:
+                          Items:
+                            Properties:
+                              Mount Path:
+                                Type:  string
+                              Mount Propagation:
+                                Type:  string
+                              Name:
+                                Type:  string
+                              Read Only:
+                                Type:  boolean
+                              Sub Path:
+                                Type:  string
+                              Sub Path Expr:
+                                Type:  string
+                            Required:
+                              mountPath
+                              name
+                            Type:  object
+                          Type:    array
+                        Propagation:
+                          Items:
+                            Type:  string
+                          Type:    array
+                        Volumes:
+                          Items:
+                            Properties:
+                              Cephfs:
+                                Properties:
+                                  Monitors:
+                                    Items:
+                                      Type:  string
+                                    Type:    array
+                                  Path:
+                                    Type:  string
+                                  Read Only:
+                                    Type:  boolean
+                                  Secret File:
+                                    Type:  string
+                                  Secret Ref:
+                                    Properties:
+                                      Name:
+                                        Type:                     string
+                                    Type:                         object
+                                    X - Kubernetes - Map - Type:  atomic
+                                  User:
+                                    Type:  string
+                                Required:
+                                  monitors
+                                Type:  object
+                              Config Map:
+                                Properties:
+                                  Default Mode:
+                                    Format:  int32
+                                    Type:    integer
+                                  Items:
+                                    Items:
+                                      Properties:
+                                        Key:
+                                          Type:  string
+                                        Mode:
+                                          Format:  int32
+                                          Type:    integer
+                                        Path:
+                                          Type:  string
+                                      Required:
+                                        key
+                                        path
+                                      Type:  object
+                                    Type:    array
+                                  Name:
+                                    Type:  string
+                                  Optional:
+                                    Type:                     boolean
+                                Type:                         object
+                                X - Kubernetes - Map - Type:  atomic
+                              Csi:
+                                Properties:
+                                  Driver:
+                                    Type:  string
+                                  Fs Type:
+                                    Type:  string
+                                  Node Publish Secret Ref:
+                                    Properties:
+                                      Name:
+                                        Type:                     string
+                                    Type:                         object
+                                    X - Kubernetes - Map - Type:  atomic
+                                  Read Only:
+                                    Type:  boolean
+                                  Volume Attributes:
+                                    Additional Properties:
+                                      Type:  string
+                                    Type:    object
+                                Required:
+                                  driver
+                                Type:  object
+                              Downward API:
+                                Properties:
+                                  Default Mode:
+                                    Format:  int32
+                                    Type:    integer
+                                  Items:
+                                    Items:
+                                      Properties:
+                                        Field Ref:
+                                          Properties:
+                                            API Version:
+                                              Type:  string
+                                            Field Path:
+                                              Type:  string
+                                          Required:
+                                            fieldPath
+                                          Type:                         object
+                                          X - Kubernetes - Map - Type:  atomic
+                                        Mode:
+                                          Format:  int32
+                                          Type:    integer
+                                        Path:
+                                          Type:  string
+                                        Resource Field Ref:
+                                          Properties:
+                                            Container Name:
+                                              Type:  string
+                                            Divisor:
+                                              Any Of:
+                                                Type:                              integer
+                                                Type:                              string
+                                              Pattern:                             ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                              X - Kubernetes - Int - Or - String:  true
+                                            Resource:
+                                              Type:  string
+                                          Required:
+                                            resource
+                                          Type:                         object
+                                          X - Kubernetes - Map - Type:  atomic
+                                      Required:
+                                        path
+                                      Type:  object
+                                    Type:    array
+                                Type:        object
+                              Empty Dir:
+                                Properties:
+                                  Medium:
+                                    Type:  string
+                                  Size Limit:
+                                    Any Of:
+                                      Type:                              integer
+                                      Type:                              string
+                                    Pattern:                             ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    X - Kubernetes - Int - Or - String:  true
+                                Type:                                    object
+                              Fc:
+                                Properties:
+                                  Fs Type:
+                                    Type:  string
+                                  Lun:
+                                    Format:  int32
+                                    Type:    integer
+                                  Read Only:
+                                    Type:  boolean
+                                  Target WW Ns:
+                                    Items:
+                                      Type:  string
+                                    Type:    array
+                                  Wwids:
+                                    Items:
+                                      Type:  string
+                                    Type:    array
+                                Type:        object
+                              Host Path:
+                                Properties:
+                                  Path:
+                                    Type:  string
+                                  Type:
+                                    Type:  string
+                                Required:
+                                  path
+                                Type:  object
+                              Iscsi:
+                                Properties:
+                                  Chap Auth Discovery:
+                                    Type:  boolean
+                                  Chap Auth Session:
+                                    Type:  boolean
+                                  Fs Type:
+                                    Type:  string
+                                  Initiator Name:
+                                    Type:  string
+                                  Iqn:
+                                    Type:  string
+                                  Iscsi Interface:
+                                    Type:  string
+                                  Lun:
+                                    Format:  int32
+                                    Type:    integer
+                                  Portals:
+                                    Items:
+                                      Type:  string
+                                    Type:    array
+                                  Read Only:
+                                    Type:  boolean
+                                  Secret Ref:
+                                    Properties:
+                                      Name:
+                                        Type:                     string
+                                    Type:                         object
+                                    X - Kubernetes - Map - Type:  atomic
+                                  Target Portal:
+                                    Type:  string
+                                Required:
+                                  iqn
+                                  lun
+                                  targetPortal
+                                Type:  object
+                              Name:
+                                Type:  string
+                              Nfs:
+                                Properties:
+                                  Path:
+                                    Type:  string
+                                  Read Only:
+                                    Type:  boolean
+                                  Server:
+                                    Type:  string
+                                Required:
+                                  path
+                                  server
+                                Type:  object
+                              Persistent Volume Claim:
+                                Properties:
+                                  Claim Name:
+                                    Type:  string
+                                  Read Only:
+                                    Type:  boolean
+                                Required:
+                                  claimName
+                                Type:  object
+                              Projected:
+                                Properties:
+                                  Default Mode:
+                                    Format:  int32
+                                    Type:    integer
+                                  Sources:
+                                    Items:
+                                      Properties:
+                                        Cluster Trust Bundle:
+                                          Properties:
+                                            Label Selector:
+                                              Properties:
+                                                Match Expressions:
+                                                  Items:
+                                                    Properties:
+                                                      Key:
+                                                        Type:  string
+                                                      Operator:
+                                                        Type:  string
+                                                      Values:
+                                                        Items:
+                                                          Type:  string
+                                                        Type:    array
+                                                    Required:
+                                                      key
+                                                      operator
+                                                    Type:  object
+                                                  Type:    array
+                                                Match Labels:
+                                                  Additional Properties:
+                                                    Type:                   string
+                                                  Type:                     object
+                                              Type:                         object
+                                              X - Kubernetes - Map - Type:  atomic
+                                            Name:
+                                              Type:  string
+                                            Optional:
+                                              Type:  boolean
+                                            Path:
+                                              Type:  string
+                                            Signer Name:
+                                              Type:  string
+                                          Required:
+                                            path
+                                          Type:  object
+                                        Config Map:
+                                          Properties:
+                                            Items:
+                                              Items:
+                                                Properties:
+                                                  Key:
+                                                    Type:  string
+                                                  Mode:
+                                                    Format:  int32
+                                                    Type:    integer
+                                                  Path:
+                                                    Type:  string
+                                                Required:
+                                                  key
+                                                  path
+                                                Type:  object
+                                              Type:    array
+                                            Name:
+                                              Type:  string
+                                            Optional:
+                                              Type:                     boolean
+                                          Type:                         object
+                                          X - Kubernetes - Map - Type:  atomic
+                                        Downward API:
+                                          Properties:
+                                            Items:
+                                              Items:
+                                                Properties:
+                                                  Field Ref:
+                                                    Properties:
+                                                      API Version:
+                                                        Type:  string
+                                                      Field Path:
+                                                        Type:  string
+                                                    Required:
+                                                      fieldPath
+                                                    Type:                         object
+                                                    X - Kubernetes - Map - Type:  atomic
+                                                  Mode:
+                                                    Format:  int32
+                                                    Type:    integer
+                                                  Path:
+                                                    Type:  string
+                                                  Resource Field Ref:
+                                                    Properties:
+                                                      Container Name:
+                                                        Type:  string
+                                                      Divisor:
+                                                        Any Of:
+                                                          Type:                              integer
+                                                          Type:                              string
+                                                        Pattern:                             ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                                        X - Kubernetes - Int - Or - String:  true
+                                                      Resource:
+                                                        Type:  string
+                                                    Required:
+                                                      resource
+                                                    Type:                         object
+                                                    X - Kubernetes - Map - Type:  atomic
+                                                Required:
+                                                  path
+                                                Type:  object
+                                              Type:    array
+                                          Type:        object
+                                        Secret:
+                                          Properties:
+                                            Items:
+                                              Items:
+                                                Properties:
+                                                  Key:
+                                                    Type:  string
+                                                  Mode:
+                                                    Format:  int32
+                                                    Type:    integer
+                                                  Path:
+                                                    Type:  string
+                                                Required:
+                                                  key
+                                                  path
+                                                Type:  object
+                                              Type:    array
+                                            Name:
+                                              Type:  string
+                                            Optional:
+                                              Type:                     boolean
+                                          Type:                         object
+                                          X - Kubernetes - Map - Type:  atomic
+                                        Service Account Token:
+                                          Properties:
+                                            Audience:
+                                              Type:  string
+                                            Expiration Seconds:
+                                              Format:  int64
+                                              Type:    integer
+                                            Path:
+                                              Type:  string
+                                          Required:
+                                            path
+                                          Type:  object
+                                      Type:      object
+                                    Type:        array
+                                Type:            object
+                              Scale IO:
+                                Properties:
+                                  Fs Type:
+                                    Type:  string
+                                  Gateway:
+                                    Type:  string
+                                  Protection Domain:
+                                    Type:  string
+                                  Read Only:
+                                    Type:  boolean
+                                  Secret Ref:
+                                    Properties:
+                                      Name:
+                                        Type:                     string
+                                    Type:                         object
+                                    X - Kubernetes - Map - Type:  atomic
+                                  Ssl Enabled:
+                                    Type:  boolean
+                                  Storage Mode:
+                                    Type:  string
+                                  Storage Pool:
+                                    Type:  string
+                                  System:
+                                    Type:  string
+                                  Volume Name:
+                                    Type:  string
+                                Required:
+                                  gateway
+                                  secretRef
+                                  system
+                                Type:  object
+                              Secret:
+                                Properties:
+                                  Default Mode:
+                                    Format:  int32
+                                    Type:    integer
+                                  Items:
+                                    Items:
+                                      Properties:
+                                        Key:
+                                          Type:  string
+                                        Mode:
+                                          Format:  int32
+                                          Type:    integer
+                                        Path:
+                                          Type:  string
+                                      Required:
+                                        key
+                                        path
+                                      Type:  object
+                                    Type:    array
+                                  Optional:
+                                    Type:  boolean
+                                  Secret Name:
+                                    Type:  string
+                                Type:      object
+                              Storageos:
+                                Properties:
+                                  Fs Type:
+                                    Type:  string
+                                  Read Only:
+                                    Type:  boolean
+                                  Secret Ref:
+                                    Properties:
+                                      Name:
+                                        Type:                     string
+                                    Type:                         object
+                                    X - Kubernetes - Map - Type:  atomic
+                                  Volume Name:
+                                    Type:  string
+                                  Volume Namespace:
+                                    Type:  string
+                                Type:      object
+                            Required:
+                              name
+                            Type:  object
+                          Type:    array
+                      Required:
+                        mounts
+                        volumes
+                      Type:  object
+                    Type:    array
+                  Management Network:
+                    Default:  ctlplane
+                    Type:     string
+                  Network Data:
+                    Properties:
+                      Name:
+                        Type:  string
+                      Namespace:
+                        Type:                     string
+                    Type:                         object
+                    X - Kubernetes - Map - Type:  atomic
+                  Networks:
+                    Items:
+                      Properties:
+                        Default Route:
+                          Type:  boolean
+                        Fixed IP:
+                          Type:  string
+                        Name:
+                          Pattern:  ^[a-zA-Z0-9][a-zA-Z0-9\-_]*[a-zA-Z0-9]$
+                          Type:     string
+                        Subnet Name:
+                          Pattern:  ^[a-zA-Z0-9][a-zA-Z0-9\-_]*[a-zA-Z0-9]$
+                          Type:     string
+                      Required:
+                        name
+                        subnetName
+                      Type:  object
+                    Type:    array
+                  User Data:
+                    Properties:
+                      Name:
+                        Type:  string
+                      Namespace:
+                        Type:                     string
+                    Type:                         object
+                    X - Kubernetes - Map - Type:  atomic
+                Required:
+                  ansibleSSHPrivateKeySecret
+                Type:  object
+              Nodes:
+                Additional Properties:
+                  Properties:
+                    Ansible:
+                      Properties:
+                        Ansible Host:
+                          Type:  string
+                        Ansible Port:
+                          Type:  integer
+                        Ansible User:
+                          Type:  string
+                        Ansible Vars:
+                          X - Kubernetes - Preserve - Unknown - Fields:  true
+                        Ansible Vars From:
+                          Items:
+                            Properties:
+                              Config Map Ref:
+                                Properties:
+                                  Name:
+                                    Max Length:  253
+                                    Type:        string
+                                  Optional:
+                                    Type:                     boolean
+                                Type:                         object
+                                X - Kubernetes - Map - Type:  atomic
+                              Prefix:
+                                Type:  string
+                              Secret Ref:
+                                Properties:
+                                  Name:
+                                    Max Length:  253
+                                    Type:        string
+                                  Optional:
+                                    Type:                     boolean
+                                Type:                         object
+                                X - Kubernetes - Map - Type:  atomic
+                            Type:                             object
+                          Type:                               array
+                      Type:                                   object
+                    Bmh Label Selector:
+                      Additional Properties:
+                        Type:  string
+                      Type:    object
+                    Host Name:
+                      Type:  string
+                    Management Network:
+                      Type:  string
+                    Network Data:
+                      Properties:
+                        Name:
+                          Type:  string
+                        Namespace:
+                          Type:                     string
+                      Type:                         object
+                      X - Kubernetes - Map - Type:  atomic
+                    Networks:
+                      Items:
+                        Properties:
+                          Default Route:
+                            Type:  boolean
+                          Fixed IP:
+                            Type:  string
+                          Name:
+                            Pattern:  ^[a-zA-Z0-9][a-zA-Z0-9\-_]*[a-zA-Z0-9]$
+                            Type:     string
+                          Subnet Name:
+                            Pattern:  ^[a-zA-Z0-9][a-zA-Z0-9\-_]*[a-zA-Z0-9]$
+                            Type:     string
+                        Required:
+                          name
+                          subnetName
+                        Type:  object
+                      Type:    array
+                    User Data:
+                      Properties:
+                        Name:
+                          Type:  string
+                        Namespace:
+                          Type:                     string
+                      Type:                         object
+                      X - Kubernetes - Map - Type:  atomic
+                  Type:                             object
+                Type:                               object
+              Pre Provisioned:
+                Type:  boolean
+              Secret Max Size:
+                Default:  1048576
+                Type:     integer
+              Services:
+                Default:
+                  redhat
+                  download-cache
+                  bootstrap
+                  configure-network
+                  validate-network
+                  install-os
+                  configure-os
+                  ssh-known-hosts
+                  run-os
+                  reboot-os
+                  install-certs
+                  ovn
+                  neutron-metadata
+                  libvirt
+                  nova
+                  telemetry
+                Items:
+                  Type:  string
+                Type:    array
+              Tags:
+                Items:
+                  Type:  string
+                Type:    array
+              Tls Enabled:
+                Default:  true
+                Type:     boolean
+            Required:
+              nodeTemplate
+              nodes
+            Type:  object
+          Status:
+            Properties:
+              All Hostnames:
+                Additional Properties:
+                  Additional Properties:
+                    Type:  string
+                  Type:    object
+                Type:      object
+              All I Ps:
+                Additional Properties:
+                  Additional Properties:
+                    Type:  string
+                  Type:    object
+                Type:      object
+              Bmh Ref Hash:
+                Type:  string
+              Conditions:
+                Items:
+                  Properties:
+                    Last Transition Time:
+                      Format:  date-time
+                      Type:    string
+                    Message:
+                      Type:  string
+                    Reason:
+                      Type:  string
+                    Severity:
+                      Type:  string
+                    Status:
+                      Type:  string
+                    Type:
+                      Type:  string
+                  Required:
+                    lastTransitionTime
+                    status
+                    type
+                  Type:  object
+                Type:    array
+              Config Hash:
+                Type:  string
+              Config Map Hashes:
+                Additional Properties:
+                  Type:  string
+                Type:    object
+              Container Images:
+                Additional Properties:
+                  Type:  string
+                Type:    object
+              Ctlplane Search Domain:
+                Type:  string
+              Deployed Bmh Hash:
+                Type:  string
+              Deployed Config Hash:
+                Type:  string
+              Deployed Version:
+                Type:  string
+              Deployment Statuses:
+                Additional Properties:
+                  Items:
+                    Properties:
+                      Last Transition Time:
+                        Format:  date-time
+                        Type:    string
+                      Message:
+                        Type:  string
+                      Reason:
+                        Type:  string
+                      Severity:
+                        Type:  string
+                      Status:
+                        Type:  string
+                      Type:
+                        Type:  string
+                    Required:
+                      lastTransitionTime
+                      status
+                      type
+                    Type:  object
+                  Type:    array
+                Type:      object
+              Dns Cluster Addresses:
+                Items:
+                  Type:  string
+                Type:    array
+              Inventory Secret Name:
+                Type:  string
+              Observed Generation:
+                Format:  int64
+                Type:    integer
+              Secret Hashes:
+                Additional Properties:
+                  Type:  string
+                Type:    object
+            Type:        object
+        Type:            object
+    Served:              true
+    Storage:             true
+    Subresources:
+      Status:
+Status:
+  Accepted Names:
+    Kind:       OpenStackDataPlaneNodeSet
+    List Kind:  OpenStackDataPlaneNodeSetList
+    Plural:     openstackdataplanenodesets
+    Short Names:
+      osdpns
+      osdpnodeset
+      osdpnodesets
+    Singular:  openstackdataplanenodeset
+  Conditions:
+    Last Transition Time:  2025-07-16T18:22:58Z
+    Message:               no conflicts found
+    Reason:                NoConflicts
+    Status:                True
+    Type:                  NamesAccepted
+    Last Transition Time:  2025-07-16T18:22:58Z
+    Message:               the initial names have been accepted
+    Reason:                InitialNamesAccepted
+    Status:                True
+    Type:                  Established
+  Stored Versions:
+    v1beta1
+Events:  <none>

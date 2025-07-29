@@ -17,6 +17,18 @@ spec:
       routes:
       - destination: 10.0.0.0/24
         nexthop: 172.10.10.1
+  - name: ospmgmt
+    dnsDomain: ospmgmt.demolab.internal
+    subnets:
+    - name: ospmgmtsubnet
+      allocationRanges:
+      - end: 172.10.40.130
+        start: 172.10.40.100
+      cidr: 172.10.40.0/24
+      gateway: 172.10.40.1
+      routes:
+      - destination: 10.0.0.0/24
+        nexthop: 172.10.40.1
   - name: internalapi
     dnsDomain: internalapi.demolab.internal 
     subnets:
@@ -33,3 +45,11 @@ spec:
       - end: 172.10.30.130
         start: 172.10.30.100
       cidr: 172.10.30.0/24
+  - name: tenant
+    dnsDomain: tenant.demolab.internal
+    subnets:
+    - name: tenantsubnet
+      allocationRanges:
+      - end: 172.10.50.130
+        start: 172.10.50.100
+      cidr: 172.10.50.0/24

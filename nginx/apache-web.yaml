@@ -1,0 +1,199 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yum-repo-server # Changed name to reflect YUM repo server
+  labels:
+    app: yum-repo-server # Changed label
+  namespace: openstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yum-repo-server # Matches the label of the Deployment pods
+  template:
+    metadata:
+      labels:
+        app: yum-repo-server # Changed label
+    spec:
+      containers:
+      - name: apache
+        image: registry.access.redhat.com/ubi8/httpd-24 # Using Red Hat UBI-based Apache image
+        env: # Environment variables for Apache configuration
+        - name: SERVER_NAME
+          value: "localhost:8080" # Set ServerName via environment variable
+        ports:
+        - containerPort: 8080 # Apache will listen on port 8080 (non-privileged)
+        readinessProbe:
+          httpGet:
+            path: / # Probe path back to / as it's the new DocumentRoot
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: / # Probe path back to / as it's the new DocumentRoot
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        - name: apache-custom-config-volume
+          mountPath: "/etc/httpd/conf.d/custom.conf" # Mount to conf.d
+          subPath: custom.conf
+        - name: yum-repo-data
+          mountPath: "/var/www/html/repo" # Mount point for YUM repo content
+        - name: apache-html-volume # NEW: Mount for index.html
+          mountPath: "/var/www/html/repo/index.html" # CHANGED: Mount index.html directly into the repo DocumentRoot
+          subPath: index.html # Use a new subPath name for index.html
+      volumes:
+      - name: apache-custom-config-volume
+        configMap:
+          name: apache-config
+          items:
+          - key: custom.conf
+            path: custom.conf
+      - name: yum-repo-data
+        persistentVolumeClaim:
+          claimName: yum-repo-pvc # Refers to the PVC defined below
+      - name: apache-html-volume # NEW: Volume for index.html
+        configMap:
+          name: apache-config # Use the same ConfigMap
+          items:
+          - key: index.html # Key name for index.html
+            path: index.html # Path in volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yum-repo-server-service # Changed name
+  labels:
+    app: yum-repo-server # Changed label
+  namespace: openstack
+spec:
+  selector:
+    app: yum-repo-server # Matches the labels of the Deployment pods
+  ports:
+    - protocol: TCP
+      port: 80 # The port the service exposes
+      targetPort: 8080 # The port the Apache container listens on
+  type: ClusterIP # Makes the service only accessible within the cluster
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: yum-repo-server-route # Changed name
+  labels:
+    app: yum-repo-server # Changed label
+  namespace: openstack
+spec:
+  to:
+    kind: Service
+    name: yum-repo-server-service # Points to the new Service
+  port:
+    targetPort: 8080
+  # Removed TLS section for unsecured HTTP access
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apache-config
+  labels:
+    app: yum-repo-server # Changed label
+  namespace: openstack
+data:
+  custom.conf: |
+    # custom.conf for YUM repo server - setting DocumentRoot directly
+
+    ServerName localhost:8080
+    ErrorLog /dev/stderr
+    CustomLog /dev/stdout common
+
+    # Set the DocumentRoot for the entire server to the YUM repository path
+    DocumentRoot "/var/www/html/repo"
+
+    # Directory settings for the YUM repository content (applies to the filesystem path)
+    <Directory "/var/www/html/repo">
+        Options +Indexes +FollowSymLinks
+        AllowOverride None
+        Require all granted
+        # DirectoryIndex disabled is not needed if index.html is present and handles redirection
+    </Directory>
+
+    # KeepAlive settings
+    Timeout 300
+    KeepAlive On
+    MaxKeepAliveRequests 100
+    KeepAliveTimeout 5
+  index.html: | # Content for index.html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>YUM Repository</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f0f4f8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                color: #333;
+            }
+            .container {
+                background-color: #ffffff;
+                padding: 3rem;
+                border-radius: 1rem;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                max-width: 600px;
+                border: 1px solid #e2e8f0;
+            }
+            h1 {
+                color: #2c5282;
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            p {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                margin-bottom: 0.5rem;
+            }
+            .message {
+                color: #10b981;
+                font-weight: bold;
+                margin-top: 1.5rem;
+            }
+            .footer {
+                margin-top: 2rem;
+                font-size: 0.9rem;
+                color: #718096;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to your YUM Repository!</h1>
+            <p class="message">This is the root of your YUM repository server.</p>
+            <p>You can populate this repository by copying RPM packages into the mounted volume and running `createrepo` inside the pod.</p>
+            <p>Directory listing is enabled, so you will see your repository contents here once populated.</p>
+            <div class="footer">
+                <em>Powered by OpenShift and Apache HTTP Server</em>
+            </div>
+        </div>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: PersistentVolumeClaim # NEW: PVC for YUM repository data
+metadata:
+  name: yum-repo-pvc
+  namespace: openstack
+spec:
+  accessModes:
+    - ReadWriteOnce # Can be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 5Gi # Request 5GB of storage for the repository

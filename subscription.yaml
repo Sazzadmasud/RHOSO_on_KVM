@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: subscription-manager
+  namespace: openstack
+data:
+  username: cmhuLWdwcy1zYW1hc3VkCg==
+  password: Tml4b24xMjMhCg==
+type: Opaque
