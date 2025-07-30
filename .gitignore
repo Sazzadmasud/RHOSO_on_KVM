@@ -2,3 +2,5 @@
 discovery_image_dev-rhoso-ocpv4.iso.4.19
 *.key
 privkey
+nova-migration-ssh-key
+nova-migration-ssh-key.pub
