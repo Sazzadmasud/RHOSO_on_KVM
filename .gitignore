@@ -1,2 +1,4 @@
 *.iso
 discovery_image_dev-rhoso-ocpv4.iso.4.19
+*.key
+privkey
