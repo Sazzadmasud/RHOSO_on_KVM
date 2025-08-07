@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rhel9iso-dv-1-pv
+spec:
+  capacity:
+    storage: 20Gi  # Must match the PVC's requested size
+  accessModes:
+    - ReadWriteMany # Must match the PVC's access modes
+  nfs:
+    path: /home/dev-scripts/nfs-share # Path to your NFS share
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs # Must match the PVC's storage class name

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: isopv-1
+spec:
+  capacity:
+    storage: 100Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  nfs: 
+    path: /home/dev-scripts/datavolume
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: "false"
+  labels:
+    #    kubevirt.ui/cdrom: "false"
+    #    kubevirt.ui/cdrom: "true"
+  name: isodv-1
+  namespace: openstack
+spec:
+  source:
+    http:
+      url: http://10.0.0.3/repo.iso
+  pvc:
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: isodv-2-scratch
+spec:
+  capacity:
+    storage: 100Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  nfs: 
+    path: /home/dev-scripts/datavolume
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+

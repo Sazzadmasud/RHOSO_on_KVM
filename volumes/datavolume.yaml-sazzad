@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: datavolume 
+spec:
+  capacity:
+    storage: 100Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany 
+  nfs: 
+    path: /home/dev-scripts/datavolume
+    server: 10.0.0.3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+  labels:
+    #    kubevirt.ui/cdrom: "false"
+    #    kubevirt.ui/cdrom: "true"
+  name: datavolume-0
+  namespace: openstack
+spec:
+  source:
+    http:
+      url: http://10.0.0.3/repo.iso
+  storage:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 100Gi
+    storageClassName: nfs
+    volumeMode: Filesystem
+    volumeName: datavolume 
+  preallocation: false

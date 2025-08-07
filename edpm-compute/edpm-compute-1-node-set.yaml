@@ -1,0 +1,230 @@
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: edpm-compute
+  namespace: openstack
+spec:
+  env:
+    - name: ANSIBLE_FORCE_COLOR
+      value: "True"
+    - name: ANSIBLE_VERBOSITY
+      value: "5"
+  services:
+    - redhat
+    - bootstrap
+    - configure-network
+    - validate-network
+    - download-cache
+    - install-os
+    - configure-os
+    - ssh-known-hosts
+    - run-os
+    - reboot-os
+    - install-certs
+    - ovn
+    - neutron-metadata
+    - libvirt
+    - nova
+    - telemetry
+  networkAttachments:
+    - ctlplane
+  preProvisioned: false
+  baremetalSetTemplate:
+    deploymentSSHSecret: dataplane-ansible-ssh-private-key-secret
+    bmhNamespace: openstack
+    cloudUserName: cloud-admin
+    bmhLabelSelector:
+      app: openstack
+    ctlplaneInterface: enp2s0
+  nodes:
+    edpm-test-compute-1 :
+      hostName: edpm-test-compute-1.demolab.internal
+      ansible:
+        ansibleHost: 172.10.10.129
+        fqdn_internal_api: edpm-test-compute-1.demolab.internal
+      networks:
+      - name: ospmgmt
+        subnetName: ospmgmtsubnet
+        defaultRoute: false
+        fixedIP: 172.10.40.129
+      - name: ctlplane
+        subnetName: ctlplanesubnet
+        fixedIP: 172.10.10.129
+        defaultRoute: true
+      - name: internalapi
+        subnetName: internalapisubnet
+        fixedIP: 172.10.20.129
+      - name: storage
+        subnetName: storagesubnet
+        fixedIP: 172.10.30.129
+      - name: tenant
+        subnetName: tenantsubnet
+        fixedIP: 172.10.50.129
+  nodeTemplate:
+    ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret
+    managementNetwork: ctlplane
+    ansible:
+      ansibleUser: cloud-admin
+      ansibleVarsFrom:
+      - secretRef:
+          name: subscription-manager
+      - secretRef:
+          name: redhat-registry
+      ansibleVars:
+         rhc_release: 9.4
+         rhc_repositories:
+             - {name: "*", state: disabled}
+             - {name: "rhel-9-for-x86_64-baseos-eus-rpms", state: enabled}
+             - {name: "rhel-9-for-x86_64-appstream-eus-rpms", state: enabled}
+             - {name: "rhel-9-for-x86_64-highavailability-eus-rpms", state: enabled}
+             - {name: "rhoso-18.0-for-rhel-9-x86_64-rpms", state: enabled}
+             - {name: "fast-datapath-for-rhel-9-x86_64-rpms", state: enabled}           
+         edpm_network_config_template: |
+           ---
+           {% set mtu_list = [ospmgmt_mtu] %}
+           {% for network in nodeset_networks %}
+           {{ mtu_list.append(lookup('vars', networks_lower[network] ~ '_mtu')) }}
+           {%- endfor %}
+           {% set min_viable_mtu = mtu_list | max %}
+           network_config:
+           - type: interface
+             name: nic1
+             mtu: {{ ospmgmt_mtu }}
+             dns_servers: {{ ospmgmt_dns_nameservers }}
+             domain: {{ dns_search_domains }}
+             use_dhcp: false
+             addresses:
+             - ip_netmask: {{ ospmgmt_ip }}/{{ ospmgmt_cidr }}
+           - type: interface
+             name: nic2
+             mtu: {{ ctlplane_mtu }}
+             use_dhcp: false
+             dns_servers: {{ ospmgmt_dns_nameservers }}
+             addresses:
+             - ip_netmask: 
+                 {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+            routes: {{ ctlplane_host_routes }}
+           - type: interface
+             name: nic3
+             mtu: {{ ctlplane_mtu }}
+             use_dhcp: false
+             addresses:
+             - ip_netmask: 
+                 {{ internalapi_ip }}/{{ internalapi_cidr }}                               
+           - type: interface
+             name: nic4
+             mtu: {{ min_viable_mtu }}
+             use_dhcp: false
+             addresses:
+             - ip_netmask:
+                 {{ storage_ip }}/{{ storage_cidr }}
+             routes: {{ storage_host_routes }}
+           - type: ovs_bridge
+             name: br-ex
+             mtu: 1500
+             use_dhcp: false
+             addresses:
+             - ip_netmask:
+                {{ tenant_ip }}/{{ tenant_cidr }}
+             members:
+             - type: interface
+               name: nic5
+               mtu: 1500
+               # force the MAC address of the bridge to this interface
+               primary: true
+
+
+         edpm_bootstrap_command: |
+           cat << EOF > /etc/yum.repos.d/local_rhoso_repo.repo 
+           [rhel94-fast-datapath]
+           name=RHEL 9.4 Fast Datapath RPMS
+           baseurl=http://172.10.10.1/repo/fast-datapath-for-rhel-9-x86_64-rpms/
+           enabled=1
+           gpgcheck=0
+
+           [rhel94-appstream-eus]
+           name=RHEL 9.4 AppStream EUS RPMS
+           baseurl=http://172.10.10.1/repo/rhel-9-for-x86_64-appstream-eus-rpms/
+           enabled=1
+           gpgcheck=0
+
+           [rhel94-baseos-eus]
+           name=RHEL 9.4 BaseOS EUS RPMS
+           baseurl=http://172.10.10.1/repo/rhel-9-for-x86_64-baseos-eus-rpms/
+           enabled=1
+           gpgcheck=0
+
+           [rhel94-highavailability-eus]
+           name=RHEL 9.4 High Availability EUS RPMS
+           baseurl=http://172.10.10.1/repo/rhel-9-for-x86_64-highavailability-eus-rpms/
+           enabled=1
+           gpgcheck=0
+
+           [rhoso-18.0]
+           name=RHOSO 18.0 for RHEL 9 RPMS
+           baseurl=http://172.10.10.1/repo/rhoso-18.0-for-rhel-9-x86_64-rpms/
+           enabled=1
+           gpgcheck=0 
+
+         edpm_network_config_hide_sensitive_logs: false
+         ctlplane_host_routes:
+           - destination: 0.0.0.0/0
+             next-hop-address: 172.10.10.1
+             next-hop-interface: nic2
+           - destination: 10.0.0.0/0
+             next-hop-address: 172.10.10.1
+             next-hop-interface: nic2
+          #
+          # These vars are for the network config templates themselves and are
+          # considered EDPM network defaults (for all computes).
+         neutron_physical_bridge_name: br-ex
+         edpm_ovn_bridge_mappings: ["datacentre:br-ex"]
+         ospmgmt_host_routes: []
+         ospmgmt_subnet_cidr: 24
+         ospmgmt_dns_nameservers: 10.0.0.6
+         dns_search_domains: demolab.internal
+         ospmgmt_mtu: 1500
+         internalapi_mtu: 1500
+         internalapi_cidr: '24'
+         internalapi_host_routes: []
+         storage_mtu: 1500
+         storage_cidr: '24'
+         storage_host_routes: []
+        #  tenant_mtu: 1500
+        #  tenant_cidr: '24'
+        #  tenant_host_routes: []
+         ctlplane_mtu: 1500
+         ctlplane_cidr: '24'
+         # name of the first network interface on the compute node:
+         neutron_public_interface_name: enp1s0
+         # edpm_nodes_validation
+         edpm_nodes_validation_validate_controllers_icmp: false
+         edpm_nodes_validation_validate_gateway_icmp: false
+         gather_facts: false
+         enable_debug: false
+         edpm_bootstrap_release_version_package: []
+         edpm_libvirt_packages:
+          # main libvirt packages
+          - libvirt {{ edpm_libvirt_range }}
+          - libvirt-admin {{ edpm_libvirt_range }}
+          - libvirt-client {{ edpm_libvirt_range }}
+          - libvirt-daemon {{ edpm_libvirt_range }}
+          # qemu pakcages
+          - qemu-kvm
+          - qemu-img
+          # libguestfs is need for config drive and ephermeral disks
+          - libguestfs
+          - libseccomp
+          # swtpm is needed for TPM support
+          - swtpm
+          - swtpm-tools
+          # edk2-ovmf is needed for UEFI support
+          - edk2-ovmf
+          # ceph-common is needed for ceph support to provide the ceph client lib
+          # for qemu and the ceph udev rules
+          #- ceph-common
+          # for SASL auth
+          - cyrus-sasl-scram
+         edpm_nodes_validation_hide_sensitive_logs: false
+         edpm_podman_hide_sensitive_logs: false
+         hide_sensitive_logs: false

@@ -1,0 +1,22 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+  labels:
+    iso: rhel94
+  name: rhel9iso-dv-1
+  namespace: openstack
+spec:
+  source:
+    http:
+      url: http://10.0.0.3/repo.iso
+  storage:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 20Gi
+    storageClassName: nfs
+      #volumeMode: Filesystem
+  preallocation: false

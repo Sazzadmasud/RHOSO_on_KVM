@@ -15,6 +15,8 @@ spec:
       cidr: 172.10.10.0/24
       gateway: 172.10.10.1
       routes:
+      - destination: 0.0.0.0/24
+        nexthop: 172.10.10.1
       - destination: 10.0.0.0/24
         nexthop: 172.10.10.1
   - name: ospmgmt
@@ -26,9 +28,6 @@ spec:
         start: 172.10.40.100
       cidr: 172.10.40.0/24
       gateway: 172.10.40.1
-      routes:
-      - destination: 10.0.0.0/24
-        nexthop: 172.10.40.1
   - name: internalapi
     dnsDomain: internalapi.demolab.internal 
     subnets:

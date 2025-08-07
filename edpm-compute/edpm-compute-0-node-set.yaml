@@ -1,7 +1,7 @@
 apiVersion: dataplane.openstack.org/v1beta1
 kind: OpenStackDataPlaneNodeSet
 metadata:
-  name: edpm-compute
+  name: edpm-compute-rhsm
   namespace: openstack
 spec:
   env:
@@ -11,10 +11,10 @@ spec:
       value: "5"
   services:
     - redhat
+    - bootstrap
     - configure-network
     - validate-network
-    - download-cache
-    - bootstrap
+    - download-cache 
     - install-os
     - configure-os
     - ssh-known-hosts
@@ -103,13 +103,16 @@ spec:
              addresses:
              - ip_netmask: 
                  {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+             routes:
+               - default: true
+                 next_hop: 172.10.10.1
            - type: interface
              name: nic3
              mtu: {{ ctlplane_mtu }}
              use_dhcp: false
              addresses:
              - ip_netmask: 
-                 {{ internalapi_ip }}/{{ internalapi_cidr }}                               
+                 {{ internalapi_ip }}/{{ internalapi_cidr }}                             
            - type: interface
              name: nic4
              mtu: {{ min_viable_mtu }}
@@ -137,9 +140,21 @@ spec:
                  next-hop-address: {{ ctlplane_gateway_ip }}
                  next-hop-interface: nic2
          edpm_network_config_hide_sensitive_logs: false
+         edpm_bootstrap_command: |
+           subscription-manager register --username  --password 
+           subscription-manager repos --disable=*
+           subscription-manager release --set=9.4
+           subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms --enable=rhoso-18.0-for-rhel-9-x86_64-rpms
           #
           # These vars are for the network config templates themselves and are
           # considered EDPM network defaults (for all computes).
+         ctlplane_host_routes:
+           - destination: 0.0.0.0/0
+             next-hop-address: 172.10.10.1
+             next-hop-interface: nic2
+           - destination: 10.0.0.0/0
+             next-hop-address: 172.10.10.1
+             next-hop-interface: nic2
          neutron_physical_bridge_name: br-ex
          edpm_ovn_bridge_mappings: ["datacentre:br-ex"]
          ospmgmt_host_routes: []

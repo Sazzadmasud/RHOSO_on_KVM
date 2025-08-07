@@ -1,0 +1,94 @@
+<domain type="kvm">
+  <name>edpm-test-compute-1</name>
+  <uuid>01c52869-612a-4bde-ad6a-45eec9fab517</uuid>
+  <metadata>
+    <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
+      <libosinfo:os id="http://redhat.com/rhel/9.0"/>
+    </libosinfo:libosinfo>
+  </metadata>
+  <memory>8388608</memory>
+  <currentMemory>8388608</currentMemory>
+  <vcpu>16</vcpu>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+    <boot dev="hd"/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <cpu mode="host-passthrough"/>
+  <clock offset="utc">
+    <timer name="rtc" tickpolicy="catchup"/>
+    <timer name="pit" tickpolicy="delay"/>
+    <timer name="hpet" present="no"/>
+  </clock>
+  <pm>
+    <suspend-to-mem enabled="no"/>
+    <suspend-to-disk enabled="no"/>
+  </pm>
+  <devices>
+    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/var/lib/libvirt/images/edpm-compute-1.qcow2"/>
+      <target dev="vda" bus="virtio"/>
+    </disk>
+    <controller type="usb" model="qemu-xhci" ports="15"/>
+    <controller type="pci" model="pcie-root"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <controller type="pci" model="pcie-root-port"/>
+    <interface type="network">
+      <source network="osp_mgmt"/>
+      <mac address="52:54:00:14:52:58"/>
+      <model type="virtio"/>
+    </interface>
+    <interface type="network">
+      <source network="ctlplane"/>
+      <mac address="52:54:00:10:37:57"/>
+      <model type="virtio"/>
+    </interface>
+    <interface type="network">
+      <source network="internal"/>
+      <mac address="52:54:00:79:c6:6a"/>
+      <model type="virtio"/>
+    </interface>
+    <interface type="network">
+      <source network="storage"/>
+      <mac address="52:54:00:82:07:54"/>
+      <model type="virtio"/>
+    </interface>
+    <interface type="network">
+      <source network="tenant"/>
+      <mac address="52:54:00:d9:2d:cd"/>
+      <model type="virtio"/>
+    </interface>
+    <console type="pty"/>
+    <channel type="unix">
+      <source mode="bind"/>
+      <target type="virtio" name="org.qemu.guest_agent.0"/>
+    </channel>
+    <input type="tablet" bus="usb"/>
+    <graphics type="vnc" port="-1"/>
+    <video>
+      <model type="virtio"/>
+    </video>
+    <memballoon model="virtio"/>
+    <rng model="virtio">
+      <backend model="random">/dev/urandom</backend>
+    </rng>
+  </devices>
+</domain>
+
