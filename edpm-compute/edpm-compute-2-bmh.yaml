@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: generic-secret
+  namespace: openstack
+type: Opaque
+data:
+  username: cm9vdAo=
+  password: cmVkaGF0MDIhQCMK
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: edpm-test-compute-2-preprovision-network-data
+  namespace: openstack
+stringData:
+  nmstate: |
+    interfaces:
+      - name: enp1s0
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          address:
+          - ip: 172.10.40.128
+            prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 10.0.0.6
+          - 10.11.5.19
+          - 8.8.8.8
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 172.10.40.1
+          next-hop-interface: enp1s0
+        - destination: 10.0.0.0/0
+          next-hop-address: 172.10.40.1
+          next-hop-interface: enp1s0
+  type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: edpm-test-compute-2
+  namespace: openstack
+  labels:
+    app: openstack
+    workload: compute
+spec:
+  bmc:
+    address: redfish-virtualmedia+http://10.0.0.3:8000/redfish/v1/Systems/a5bbe73e-d5e3-483f-807c-5ac276c18b3f
+    credentialsName: generic-secret
+  preprovisioningNetworkDataName: edpm-test-compute-2-preprovision-network-data
+  bootMACAddress: 52:54:00:83:c5:65
+  bootMode: UEFI
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/vda
